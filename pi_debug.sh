@@ -8,7 +8,7 @@ SSH_PORT="22"
 # Local and remote paths
 LOCAL_PATH="."
 # shellcheck disable=SC2088
-REMOTE_PATH="~/Eyelids"
+REMOTE_PATH="~/InterSym"
 
 # Make intermediate directories if they don't exist on the remote server
 ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "mkdir -p $REMOTE_PATH"
