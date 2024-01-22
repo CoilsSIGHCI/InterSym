@@ -45,8 +45,11 @@ class SegmentConnector:
         # Show the mask
         show = prompt_process.fast_show_mask_outline(annotations, ax, random_color=True)
 
-        # save the image
+        # save the image for debug purpose
         plt.savefig(annotated_path)
 
-        # return the ax plot as a numpy array
-        return plt.imread(annotated_path)
+        # Crop the show image to square from centre
+        s = min(show.shape[0], show.shape[1])
+        show = show[(show.shape[0] - s) // 2:(show.shape[0] + s) // 2, (show.shape[1] - s) // 2:(show.shape[1] + s) // 2]
+
+        return show
