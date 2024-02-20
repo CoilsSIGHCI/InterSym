@@ -5,7 +5,7 @@ import _thread
 from lib import Transmit, Constants
 
 from widgets.SegmentConnector import SegmentConnector
-from ui import aggregator
+from ui.ui import aggregator
 
 # make a rectangle
 rect_img = numpy.zeros((64, 128), dtype=numpy.uint8)
