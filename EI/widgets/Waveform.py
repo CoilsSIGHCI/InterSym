@@ -46,22 +46,14 @@ class Waveform:
 
         # plot the waveform
         fig = plt.Figure()
-
-        plt.figure(1)
-        plt.plot(rosa_audio_data)
-        plt.ylabel("Amplitude")
-        plt.xlabel("Time")
-        plt.title("Waveform")
-
-        plt.savefig("waveform.svg")
-
-        plt.savefig()
+        ax = fig.add_subplot(111)
+        ax.plot(rosa_audio_data)
 
         io_buf = io.BytesIO()
-        plt.savefig(io_buf, format='raw', dpi=10)
+        ax.savefig(io_buf, format='raw', dpi=10)
         io_buf.seek(0)
         show = np.reshape(np.frombuffer(io_buf.getvalue(), dtype=np.uint8),
-                             newshape=(int(plt.bbox.bounds[3]), int(plt.bbox.bounds[2]), -1))
+                             newshape=(int(ax.bbox.bounds[3]), int(ax.bbox.bounds[2]), -1))
         io_buf.close()
 
         return show
