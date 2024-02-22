@@ -405,7 +405,7 @@ class AS7341:
         else: 
             self.Write_Byte(AS7341_SP_TH_L_LSB,lowThre)
             self.Write_Byte(AS7341_SP_TH_L_MSB,lowThre>>8)  
-            self.Write_Byte(AS7341_SP_TH_H_LSB,highThre);
+            self.Write_Byte(AS7341_SP_TH_H_LSB,highThre)
             self.Write_Byte(AS7341_SP_TH_H_MSB,highThre>>8)  
             time.sleep(0.02)
 

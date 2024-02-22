@@ -1,6 +1,9 @@
+import cv2
+
+
 def send_frame(array, real=False, fps="asap"):
     if real:
-        from EI.lib import Transmit
+        from EI.display import Transmit
         Transmit.display(array)
 
     # TODO: Add support for display preview
@@ -22,7 +25,16 @@ def send_frame(array, real=False, fps="asap"):
 def aggregator(dst, square, order, axis=1):
     import numpy
     remain_order = 1 - order
-    dst_remain = numpy.split(dst, [square], axis=axis)[remain_order]
+    # split the dst into by half
+    dst_remain = numpy.split(dst, 2, axis=axis)[remain_order]
+    # make square b&w if it's not
+    if len(square.shape) > 2:
+        square = square.mean(axis=2)
+    # resample the square to fit the dst
+    if axis == 1:
+        square = cv2.resize(square, (dst.shape[0], dst.shape[0]))
+    else:
+        square = cv2.resize(square, (dst.shape[1], dst.shape[1]))
     if order == 0:
         return numpy.concatenate((square, dst_remain), axis=axis)
     else:

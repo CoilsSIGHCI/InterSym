@@ -1,12 +1,15 @@
 # get image stream from raspberry pi camera
-
-from picamera2 import Picamera2
+from EI.hw import is_raspberry_pi
 import time
 import matplotlib.pyplot as plt
 from EI.FastSAM.fastsam import FastSAM, FastSAMPrompt
 
+on_device = is_raspberry_pi()
+if on_device:
+    from picamera2 import Picamera2
 
-frame_path = "/tmp/frame.png"
+
+frame_path = "/tmp/frame.png" if on_device else "./tests/hawksbill_sea_turtle.jpg"
 annotated_path = "/tmp/aframe.png"
 modelPath = "./EI/checkpoints/FastSAM-x.pt"
 DEVICE = "cpu"
@@ -16,15 +19,17 @@ sensor_size = [640, 480]
 
 class SegmentConnector:
     def __init__(self):
-        self.cap = Picamera2()
-        camera_config = self.cap.create_preview_configuration()
-        self.cap.configure(camera_config)
-        self.cap.start()
         self.model = FastSAM(modelPath)
+        if on_device:
+            self.cap = Picamera2()
+            camera_config = self.cap.create_preview_configuration()
+            self.cap.configure(camera_config)
+            self.cap.start()
 
     def start(self):
         time.sleep(0.2)
-        self.cap.capture_file(frame_path)
+        if on_device:
+            self.cap.capture_file(frame_path)
 
         # Implement SAM here
         results = self.model(frame_path, device=DEVICE, imgsz=sensor_size)
@@ -53,3 +58,10 @@ class SegmentConnector:
         show = show[(show.shape[0] - s) // 2:(show.shape[0] + s) // 2, (show.shape[1] - s) // 2:(show.shape[1] + s) // 2]
 
         return show
+
+
+if __name__ == "__main__":
+    segment = SegmentConnector()
+    show = segment.start()
+    plt.imshow(show)
+    plt.show()
