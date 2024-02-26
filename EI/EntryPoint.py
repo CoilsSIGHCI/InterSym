@@ -8,7 +8,7 @@ from widgets.SegmentConnector import SegmentConnector
 from ui.ui import aggregator
 
 # make a rectangle
-rect_img = numpy.zeros((64, 128), dtype=numpy.uint8)
+rect_img = numpy.zeros(Constants.screenSize, dtype=numpy.uint8)
 
 verbose = False
 
@@ -19,11 +19,12 @@ if len(sys.argv) > 1:
         verbose = True
 
 
-segment = SegmentConnector()
+segment = SegmentConnector(rotate=True)
 
 while True:
-    show = segment.start()
+    show = segment.start(crop=False)
     aggregator(rect_img, show, 0)
-    # write the rec_img to file for debug purpose
-    imwrite("/tmp/rect_img.png", rect_img)
-    # Transmit.display(rect_img.tolist())
+    aggregator(rect_img, show, 1)
+    rect_img = rect_img.astype(numpy.uint8)
+    print(rect_img.shape)
+    Transmit.display(rect_img.tolist())

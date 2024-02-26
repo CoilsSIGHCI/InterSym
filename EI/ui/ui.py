@@ -30,12 +30,10 @@ def aggregator(dst, square, order, axis=1):
     # make square b&w if it's not
     if len(square.shape) > 2:
         square = square.mean(axis=2)
-    # resample the square to fit the dst
-    if axis == 1:
-        square = cv2.resize(square, (dst.shape[0], dst.shape[0]))
-    else:
-        square = cv2.resize(square, (dst.shape[1], dst.shape[1]))
-    if order == 0:
-        return numpy.concatenate((square, dst_remain), axis=axis)
-    else:
-        return numpy.concatenate((dst_remain, square), axis=axis)
+    # center crop the image to the size of the dst
+    side = min(square.shape[0], square.shape[1])
+    col_start = (square.shape[1] - side) // 2
+    row_start = (square.shape[0] - side) // 2
+    square = square[row_start:row_start + side, col_start:col_start + side]
+    arrays = (square, dst_remain) if order == 0 else (dst_remain, square)
+    dst[:, :] = numpy.concatenate(arrays, axis=axis)

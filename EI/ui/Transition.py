@@ -7,6 +7,7 @@ def cubic_bezier(t, pos0, pos1, ratio0, ratio1):
     r = (1-t)*((1-t)*((1-t)*pos0+t*pos0)+t*((1-t)*pos0+t*pos1))+t*((1-t)*((1-t)*pos0+t*pos1)+t*((1-t)*pos1+t*pos1))
     return int(r)
 
+
 def bezier_easing(trans_frame, target_fps, verbose=False):
     timer = time.time()
 

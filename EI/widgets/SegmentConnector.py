@@ -3,11 +3,13 @@ from EI.hw import is_raspberry_pi
 import time
 import matplotlib.pyplot as plt
 from EI.FastSAM.fastsam import FastSAM, FastSAMPrompt
+from EI.ui.ui import aggregator
 
 on_device = is_raspberry_pi()
+print(f"on_device: {on_device}")
 if on_device:
     from picamera2 import Picamera2
-
+    from libcamera import Transform
 
 frame_path = "/tmp/frame.png" if on_device else "./tests/hawksbill_sea_turtle.jpg"
 annotated_path = "/tmp/aframe.png"
@@ -18,15 +20,16 @@ sensor_size = [640, 480]
 
 
 class SegmentConnector:
-    def __init__(self):
+    def __init__(self, rotate=False):
         self.model = FastSAM(modelPath)
         if on_device:
             self.cap = Picamera2()
-            camera_config = self.cap.create_preview_configuration()
+            camera_config = self.cap.create_preview_configuration(
+                transform=Transform(hflip=True, vflip=True)) if rotate else self.cap.create_preview_configuration()
             self.cap.configure(camera_config)
             self.cap.start()
 
-    def start(self):
+    def start(self, crop=True):
         time.sleep(0.2)
         if on_device:
             self.cap.capture_file(frame_path)
@@ -48,20 +51,31 @@ class SegmentConnector:
         # Make the image fill the whole space
         ax.set_position([0, 0, 1, 1])
         # Show the mask
-        show = prompt_process.fast_show_mask_outline(annotations, ax, random_color=True)
+        show = prompt_process.fast_show_mask_outline(annotations)
 
         # save the image for debug purpose
         plt.savefig(annotated_path)
 
         # Crop the show image to square from centre
-        s = min(show.shape[0], show.shape[1])
-        show = show[(show.shape[0] - s) // 2:(show.shape[0] + s) // 2, (show.shape[1] - s) // 2:(show.shape[1] + s) // 2]
+        if crop:
+            s = min(show.shape[0], show.shape[1])
+            show = show[(show.shape[0] - s) // 2:(show.shape[0] + s) // 2,
+                   (show.shape[1] - s) // 2:(show.shape[1] + s) // 2]
 
         return show
 
 
 if __name__ == "__main__":
+    import numpy
+    import cv2
+
+    rect_img = numpy.zeros((64, 128), dtype=numpy.uint8)
+    # fill with 0x80
+    rect_img[0:64, 0:128] = 0x80
+
     segment = SegmentConnector()
     show = segment.start()
-    plt.imshow(show)
-    plt.show()
+    aggregator(rect_img, show, 0)
+    aggregator(rect_img, show, 1)
+    cv2.imshow("simulated", rect_img)
+    cv2.waitKey(0)
