@@ -1,25 +1,17 @@
 import cv2
+from EI.hw import is_raspberry_pi
+
+on_device = is_raspberry_pi()
 
 
-def send_frame(array, real=False, fps="asap"):
-    if real:
+def send_frame(array):
+    if on_device:
         from EI.display import Transmit
         Transmit.display(array)
 
-    # TODO: Add support for display preview
     else:
-        from matplotlib import animation
-        import matplotlib.pyplot as plt
-        import numpy
-
-        fig, ax = plt.subplots()
-        im = ax.imshow(array, animated=True)
-
-        def updatefig(*args):
-            im.set_array(numpy.random.rand(64, 128))
-            return im,
-
-        plt.show()
+        cv2.imshow("frame", array)
+        cv2.waitKey(0)
 
 
 def aggregator(dst, square, order, axis=1):
