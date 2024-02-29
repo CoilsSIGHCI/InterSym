@@ -3,7 +3,9 @@ import RPi.GPIO as GPIO
 from .Utils import chunk
 from .Constants import spi, A0, RESN
 
-def display(image: list, config=None) -> None:
+def display(image: list, hflip=True) -> None:
+    if hflip:
+        image = [byte[::-1] for byte in image]
     GPIO.output(A0, 0)
     data_slice = chunk(image)
     spi.xfer([0xAF]) # activates the display (0xAE to turn it off)

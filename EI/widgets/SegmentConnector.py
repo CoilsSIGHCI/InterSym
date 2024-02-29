@@ -25,7 +25,7 @@ class SegmentConnector:
         if on_device:
             self.cap = Picamera2()
             camera_config = self.cap.create_preview_configuration(
-                transform=Transform(hflip=True, vflip=True)) if rotate else self.cap.create_preview_configuration()
+                transform=Transform(vflip=True)) if rotate else self.cap.create_preview_configuration()
             self.cap.configure(camera_config)
             self.cap.start()
 
