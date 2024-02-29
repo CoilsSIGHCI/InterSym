@@ -58,7 +58,7 @@ class GenericSpectrum:
                       self.device.NIR])
         x_smooth = np.linspace(x.min(), x.max(), 64)
         y_smooth = make_interp_spline(x, y)(x_smooth)
-        ax.plot(x_smooth, y_smooth, color="white", linewidth=2)
+        ax.plot(x_smooth, y_smooth, color="white", linewidth=1)
 
         y_max = y.max()
         text = "{:d}".format(y_max)
