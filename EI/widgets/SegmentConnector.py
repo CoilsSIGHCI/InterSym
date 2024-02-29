@@ -3,7 +3,7 @@ from EI.hw import is_raspberry_pi
 import time
 import matplotlib.pyplot as plt
 from EI.FastSAM.fastsam import FastSAM, FastSAMPrompt
-from EI.ui.ui import aggregator
+from EI.ui.UI import aggregator
 
 on_device = is_raspberry_pi()
 print(f"on_device: {on_device}")
@@ -51,18 +51,18 @@ class SegmentConnector:
         # Make the image fill the whole space
         ax.set_position([0, 0, 1, 1])
         # Show the mask
-        show = prompt_process.fast_show_mask_outline(annotations)
+        render = prompt_process.fast_show_mask_outline(annotations)
 
         # save the image for debug purpose
         plt.savefig(annotated_path)
 
         # Crop the show image to square from centre
         if crop:
-            s = min(show.shape[0], show.shape[1])
-            show = show[(show.shape[0] - s) // 2:(show.shape[0] + s) // 2,
-                   (show.shape[1] - s) // 2:(show.shape[1] + s) // 2]
+            s = min(render.shape[0], render.shape[1])
+            render = render[(render.shape[0] - s) // 2:(render.shape[0] + s) // 2,
+                     (render.shape[1] - s) // 2:(render.shape[1] + s) // 2]
 
-        return show
+        return render
 
 
 if __name__ == "__main__":

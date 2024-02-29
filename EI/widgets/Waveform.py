@@ -9,7 +9,7 @@ import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.io.wavfile import read, write
-from findMF import extract_main_frequency
+from FindMF import extract_main_frequency
 
 WAV_FILE = "/tmp/wavefile.wav"
 CHANNEL_NUM = 1

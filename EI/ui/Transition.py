@@ -1,6 +1,6 @@
 import time
 import numpy
-from .ui import send_frame
+from .UI import send_frame
 
 
 def cubic_bezier(t, pos0, pos1, ratio0, ratio1):
