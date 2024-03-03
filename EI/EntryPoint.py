@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import RPi.GPIO as GPIO
 import numpy
 from cv2 import imwrite
@@ -29,5 +31,7 @@ while True:
     spectrum_figure = spectrum.start()
     aggregator(rect_img, spectrum_figure, 1)
     rect_img = rect_img.astype(numpy.uint8)
-    print(rect_img.shape)
+    time_string = datetime.now().strftime("%m-%d-%Y--%H-%M-%S")
+    imwrite(f"/tmp/InterSym/{time_string}/segment.png", segment_figure)
+    imwrite(f"/tmp/InterSym/{time_string}/spectrum.png", spectrum_figure)
     Transmit.display(rect_img.tolist())
