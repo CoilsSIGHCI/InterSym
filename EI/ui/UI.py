@@ -1,10 +1,8 @@
-import cv2
-from EI.hw import is_raspberry_pi
-
-on_device = is_raspberry_pi()
-
-
 def send_frame(array):
+    import cv2
+    from EI.hw import is_raspberry_pi
+
+    on_device = is_raspberry_pi()
     if on_device:
         from EI.display import Transmit
         Transmit.display(array)
