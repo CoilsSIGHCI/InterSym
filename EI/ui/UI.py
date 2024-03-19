@@ -25,5 +25,9 @@ def aggregator(dst, square, order, axis=1):
     col_start = (square.shape[1] - side) // 2
     row_start = (square.shape[0] - side) // 2
     square = square[row_start:row_start + side, col_start:col_start + side]
+    # trim 1px of the border of the square
+    square = square[1:-1, 1:-1]
+    # add 1px border
+    square = numpy.pad(square, 1, mode='constant', constant_values=255)
     arrays = (square, dst_remain) if order == 0 else (dst_remain, square)
     dst[:, :] = numpy.concatenate(arrays, axis=axis)
